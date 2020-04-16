@@ -37,6 +37,8 @@ class ApplicationTests {
 
         //经过inboundHandler解析成业务需要的内容
         String msg = channel.readInbound();
+
+        //判断是否符合预期
         assertEquals(request, msg);
 
         //是否读取完毕
