@@ -7,6 +7,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sun.plugin2.message.Serializer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
