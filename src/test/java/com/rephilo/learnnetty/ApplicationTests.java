@@ -25,13 +25,13 @@ class ApplicationTests {
         channel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8));
         channel.pipeline().addLast(new StringEncoder(StandardCharsets.UTF_8));
 
-        //mock传入的byte
+        //mock输入的byte
         String request = "request";
         ByteBuf buf = Unpooled.buffer();
         buf.writeBytes(request.getBytes());
         ByteBuf input = buf.duplicate();
 
-        //接收消息
+        //输入消息写入inboundHandler
         assertTrue(channel.writeInbound(input));
         assertTrue(channel.finish());
 
@@ -49,14 +49,23 @@ class ApplicationTests {
         channel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8));
         channel.pipeline().addLast(new StringEncoder(StandardCharsets.UTF_8));
 
-        //mock传入的byte
+        //mock输出消息
         String response = "response";
 
-        //经过outboundHandler编码
+        //输出消息写入outboundHandler
         assertTrue(channel.writeOutbound(response));
         assertTrue(channel.finish());
 
-        //是否编码成功
-        assertNotNull(channel.readOutbound());
+        //输出消息是否写入成功
+        ByteBuf output = channel.readOutbound();
+        assertNotNull(output);
+
+        //读取输出的消息
+        byte[] bytes = new byte[output.readableBytes()];
+        int readerIndex = output.readerIndex();
+        output.getBytes(readerIndex, bytes);
+
+        //判断是否符合预期
+        assertEquals(new String(bytes), response);
     }
 }
